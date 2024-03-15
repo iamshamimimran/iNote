@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Notes } from "../models/Notes.js";
 import { User } from "../models/User.js";
 import { body, validationResult } from 'express-validator';
 import bcrypt from "bcryptjs";
@@ -97,8 +98,44 @@ router.post('/getuser', fetchUser, async (req, res) => {
     res.status(500).send('Internal Server Error'); 
   }
 });
+//ROUTE : 1 --> Fetch all Notes
+
+router.get('/fetchallnotes', fetchUser, async (req, res) => {
+  try {
+      const notes = await Notes.find({ user: req.user.id });
+      res.json(notes);
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+//ROUTE : 2 --> add notes all Notes
 
 
+router.post('/addnote', fetchUser, [
+  body('title').isLength({ min: 3 }),
+  body('description').isLength({ min: 3 }),
+], async (req, res) => {
+  try {
+      const { title, description, tag } = req.body;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+      }
+      const note = new Notes({
+          title,
+          description,
+          tag,
+          user: req.user.id
+      });
+      const saveNote = await note.save();
+      res.json(saveNote);
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
+  }
+});
 
 
 export default router;
