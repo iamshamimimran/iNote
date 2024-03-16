@@ -167,5 +167,30 @@ router.put('/updatenote/:id', fetchUser, async (req, res) => {
   }
 });
 
+//ROUTE : 3 --> Update notes all Notes
+
+router.delete('/deletenote/:id', fetchUser, async (req, res) => {
+  try {
+
+    let note = await Notes.findById(req.params.id);
+
+    if (!note) {
+      return res.status(404).send("Not Found");
+    }
+
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed");
+    }
+
+    note = await Notes.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ success: true, "Success": "Note has benn deleted", note: note });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server Error");
+  }
+});
+
+
 
 export default router;
