@@ -1,8 +1,12 @@
 import React from 'react'
+import Notes from '../components/Notes'
 
 const Home = () => {
   return (
-    <div>this is Home</div>
+    <div>  
+    <h1>this is Home</h1>  
+    <Notes/>
+    </div>
   )
 }
 

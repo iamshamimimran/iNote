@@ -7,7 +7,7 @@ const Navbar = () => {
     console.log(location.pathname);
   }, [location]); 
   return (
-    <div className='container my-2'>
+    <div>
 <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
     <Link className="navbar-brand" to="/">iNote</Link>
